@@ -1,32 +1,43 @@
 #!/usr/bin/python3
-"""Defines a class Student."""
+"""
+Take stdin and check the input, make some operation on it
+"""
+import sys
 
+errorCode = {
+    "200": 0,
+    "301": 0,
+    "400": 0,
+    "401": 0,
+    "403": 0,
+    "404": 0,
+    "405": 0,
+    "500": 0,
+}
+numOfLine = 0
+sumSize = 0
 
-class Student:
-    """Represent a student."""
+try:
+    for line in sys.stdin:
+        lineToken = line.split()
+        if len(lineToken) >= 2:
+            tmp = numOfLine
+            if lineToken[-2] in errorCode:
+                errorCode[lineToken[-2]] += 1
+            numOfLine += 1
+            sumSize += int(lineToken[-1])
+        if numOfLine % 10 == 0:
+            print("File size: {:d}".format(sumSize))
+            for key, value in sorted(errorCode.items()):
+                if value:
+                    print("{:s}: {:d}".format(key, value))
+    print("File size: {:d}".format(sumSize))
+    for key, value in sorted(errorCode.items()):
+        if value:
+            print("{:s}: {:d}".format(key, value))
 
-    def __init__(self, first_name, last_name, age):
-        """Initialize a new Student.
-
-        Args:
-            first_name (str): The first name of the student.
-            last_name (str): The last name of the student.
-            age (int): The age of the student.
-        """
-        self.first_name = first_name
-        self.last_name = last_name
-        self.age = age
-
-    def to_json(self, attrs=None):
-        """Get a dictionary representation of the Student.
-
-        If attrs is a list of strings, represents only those attributes
-        included in the list.
-
-        Args:
-            attrs (list): (Optional) The attributes to represent.
-        """
-        if (type(attrs) == list and
-                all(type(ele) == str for ele in attrs)):
-            return {k: getattr(self, k) for k in attrs if hasattr(self, k)}
-        return self.__dict__
+except KeyboardInterrupt:
+    print("File size: {:d}".format(sumSize))
+    for key, value in sorted(errorCode.items()):
+        if value:
+            print("{:s}: {:d}".format(key, value))
